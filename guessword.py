@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 from random import randint
-from datetime import date, time
+from datetime import date
+import time
 
 def updateStatus():
     show_score["text"] = f"Your Score: {score}"
@@ -28,7 +29,7 @@ def getTScore():
 
 def getGuessWords():
     try:
-        with open("words.dat", "r+") as file:
+        with open("words.dat","r") as file:
             wordslist = [i.strip() for i in file.readlines()]
             chosen_word = wordslist[randint(0, len(wordslist) - 1)]
     except:
@@ -114,12 +115,13 @@ SCR_HEIGHT = main.winfo_screenheight()
 POS_X = SCR_WIDTH // 2 - WIDTH // 2
 POS_Y = SCR_HEIGHT // 2 - HEIGHT // 2
 main.geometry(f"{WIDTH}x{HEIGHT}+{POS_X}+{POS_Y}")
-img = PhotoImage(file="back.png")
-label = Label(main, image=img)
-label.place(x=0, y=0)
-#main.configure(background="lightgreen")
-main.iconbitmap("myIcon.ico")
+# img = PhotoImage(file="back.png")
+# label = Label(main, image=img)
+# label.place(x=0, y=0)
+main.configure(background="lightgreen")
+# main.iconbitmap("myIcon.ico")
 DATE = date.today().strftime("%A %d.%m.%Y")
+TIME = time.strftime("%H:%M:%S", time.localtime())
 
 
 word = Label(font="consolas 30 bold", bg="orange")
@@ -129,13 +131,15 @@ show_score = Label(font="consolas 12 bold", bg="lightgreen")
 show_top_score = Label(font="consolas 12 bold", bg="lightgreen")
 attempts_left = Label(font="consolas 12 bold", bg="lightgreen")
 coincidences = Label(font="consolas 12 bold", bg="lightgreen")
-show_date = Label(font="consolas 12 bold", text=f"Today is: {DATE}", fg="black", bd=2)
+show_date = Label(font="consolas 12 bold", text=f"Today is {DATE}", fg="black", bd=2)
+show_time = Label(font="consolas 12 bold", text=f"Current time: {TIME}", fg="black", bd=2)
 guess.place(x=210, y=10)
 show_score.place(x=10, y=165)
 show_top_score.place(x=10, y=190)
 attempts_left.place(x=10, y=215)
 coincidences.place(x=400, y=315)
 show_date.place(x=10, y=400)
+show_date.place(x=400, y=400)
 
 
 score = 0
