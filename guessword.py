@@ -20,12 +20,9 @@ def saveTScore():
         messagebox.showinfo("The Error occurred while saving the TopScore!")
 
 def getTScore():
-    try:
-        with open("top.dat", "r") as file:
-            topScore = int(file.readline())
-    except:
-        topScore = 0
-        return topScore
+    with open("top.dat", "r") as file:
+        topScore = int(file.readline())
+    return topScore
 
 def getGuessWords():
     try:
@@ -39,6 +36,7 @@ def getGuessWords():
 
 def startGame():
     global word_hidden, word_to_guess
+    print(f"TopScore startGame() = {topScore}")
     coincidences["text"] = f"Matches found: 0" 
     word_to_guess = chosen_word
     word_hidden = "*" * len(word_to_guess)
@@ -48,6 +46,7 @@ def startGame():
 
 def startNewGame():
     global word_hidden, word_to_guess
+    print(f"TopScore startNewGame() = {topScore}")
     coincidences["text"] = f"Matches found: 0"
     chosen_word = getGuessWords()
     word_to_guess = chosen_word
@@ -79,6 +78,7 @@ def getHidden(char):
 
 def buttonClicked(n):
     global word_hidden, score, user_att, total_count
+    print(f"TopScore buttonClicked(n) = {topScore}")
     buttons[n]["text"] = "."
     buttons[n]["state"] = "disabled"
     temp_word_hidden = word_hidden
@@ -150,7 +150,7 @@ show_date.place(x=10, y=400)
 
 
 score = 0
-topScore = 100
+topScore = getTScore()
 user_att = 10
 total_count = 0
 
@@ -169,5 +169,14 @@ word_hidden = ""
 
 chosen_word = getGuessWords()
 startGame()
+
+###############
+topScore = 100
+print(f"TopScore = {topScore}")
+x = getTScore()
+print(f"TopScore = {x}")
+print(f"TopScore = {getTScore()}")
+
+###############
 
 main.mainloop()
