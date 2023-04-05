@@ -3,16 +3,17 @@ from tkinter import messagebox
 from random import randint
 from datetime import date, time
 
+
 def updateStatus():
     show_score["text"] = f"Your Score: {score}"
     show_top_score["text"] = f"Top Score: {topScore}"
     attempts_left["text"] = f"Attempts left: {user_att}"
-    coincidences["text"] = f"Matches found:"
+    #coincidences["text"] = f"Matches found:" 
 
 def saveTScore():
     global topScore
     try:
-        with open("top.dat", "a+") as file:
+        with open("top.dat", "w+") as file:
             file.write(str(topScore))
             file.write("\n")
     except:
@@ -38,6 +39,7 @@ def getGuessWords():
 
 def startGame():
     global word_hidden, word_to_guess
+    coincidences["text"] = f"Matches found: 0" 
     word_to_guess = chosen_word
     word_hidden = "*" * len(word_to_guess)
     word["text"] = word_hidden
@@ -46,6 +48,7 @@ def startGame():
 
 def startNewGame():
     global word_hidden, word_to_guess
+    coincidences["text"] = f"Matches found: 0"
     chosen_word = getGuessWords()
     word_to_guess = chosen_word
     word_hidden = "*" * len(word_to_guess)
@@ -75,12 +78,14 @@ def getHidden(char):
     return temp_str
 
 def buttonClicked(n):
-    global word_hidden, score, user_att
+    global word_hidden, score, user_att, total_count
     buttons[n]["text"] = "."
     buttons[n]["state"] = "disabled"
     temp_word_hidden = word_hidden
     word_hidden = getHidden(chr(start_btn + n))
     check_count = checkWords(word_hidden, temp_word_hidden)
+    total_count += check_count
+    coincidences["text"] = f"Matches found: {total_count}"
     word["text"] = word_hidden
     if check_count > 0:
         score += check_count * 5
@@ -95,12 +100,18 @@ def buttonClicked(n):
         updateStatus()
         if score > topScore:
             messagebox.showinfo("Congratulations!", f"You have got the highest Score: {topScore}! \nThe guessed word: {word_to_guess}. \nPress OK to continue the game.")
+            total_count = 0
+            coincidences["text"] = f"Matches found: {total_count}"
             saveTScore()
         else:
             messagebox.showinfo("Congratulations!", f"The guessed word: {word_to_guess}. \nPress OK to continue the game.")
+            total_count = 0
+            coincidences["text"] = f"Matches found: {total_count}"
         startNewGame()
     if user_att == 0:
         messagebox.showinfo("Game is over!", f"The number of possible attempts is over! \nPress OK to continue the game.")
+        total_count = 0
+        coincidences["text"] = f"Matches found: {total_count}"
         startNewGame()
 
 
@@ -117,7 +128,7 @@ main.geometry(f"{WIDTH}x{HEIGHT}+{POS_X}+{POS_Y}")
 img = PhotoImage(file="back.png")
 label = Label(main, image=img)
 label.place(x=0, y=0)
-#main.configure(background="lightgreen")
+main.configure(background="lightgreen")
 main.iconbitmap("myIcon.ico")
 DATE = date.today().strftime("%A %d.%m.%Y")
 
@@ -141,6 +152,8 @@ show_date.place(x=10, y=400)
 score = 0
 topScore = 100
 user_att = 10
+total_count = 0
+
 
 start_btn = ord("A")
 buttons = []
